@@ -1,0 +1,134 @@
+{
+  "mode": "offline-model-and-http-fixtures",
+  "live_model_calls": 0,
+  "business_writes": 0,
+  "history_restored": true,
+  "other_user_history_empty": true,
+  "turns": [
+    {
+      "events": [
+        "trace",
+        "node",
+        "node",
+        "reply",
+        "done"
+      ],
+      "trace_id": "2bb86f2dce7b4c5e8f0bdbc83193fbc5",
+      "reply": "请提供您要查询的订单号。",
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "reported": false
+      },
+      "spans": [
+        {
+          "kind": "node",
+          "name": "recognize_intent_node",
+          "duration_ms": 0.6387839093804359,
+          "error_kind": null
+        },
+        {
+          "kind": "node",
+          "name": "clarify_node",
+          "duration_ms": 0.034626107662916183,
+          "error_kind": null
+        }
+      ]
+    },
+    {
+      "events": [
+        "trace",
+        "node",
+        "node",
+        "node",
+        "node",
+        "reply",
+        "done"
+      ],
+      "trace_id": "f7ba7c47046e408c86cd4898314f5fe1",
+      "reply": "订单 DEMO_ORDER_1：待发货；虚构离线订单正在备货",
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "reported": false
+      },
+      "spans": [
+        {
+          "kind": "node",
+          "name": "recognize_intent_node",
+          "duration_ms": 0.15800818800926208,
+          "error_kind": null
+        },
+        {
+          "kind": "node",
+          "name": "call_model",
+          "duration_ms": 0.07705530151724815,
+          "error_kind": null
+        },
+        {
+          "kind": "api",
+          "name": "commerce_request",
+          "duration_ms": 0.31365128234028816,
+          "error_kind": null
+        },
+        {
+          "kind": "tool",
+          "name": "query_order_status",
+          "duration_ms": 0.3447202034294605,
+          "error_kind": null
+        },
+        {
+          "kind": "node",
+          "name": "call_model",
+          "duration_ms": 0.04937220364809036,
+          "error_kind": null
+        }
+      ]
+    },
+    {
+      "events": [
+        "trace",
+        "node",
+        "node",
+        "reply",
+        "done"
+      ],
+      "trace_id": "4cafdeac5db04576ade60cdf8f6d95cb",
+      "reply": "订单 DEMO_ORDER_1：运输中；离线轨迹示例\n物流公司：虚构物流；运单号：FIXTURE-TRACK-1\n2026-01-01T12:00:00 虚构分拣中心",
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "reported": false
+      },
+      "spans": [
+        {
+          "kind": "node",
+          "name": "recognize_intent_node",
+          "duration_ms": 0.17292611300945282,
+          "error_kind": null
+        },
+        {
+          "kind": "api",
+          "name": "commerce_request",
+          "duration_ms": 0.30079809948801994,
+          "error_kind": null
+        },
+        {
+          "kind": "tool",
+          "name": "query_order_logistics",
+          "duration_ms": 0.3300742246210575,
+          "error_kind": null
+        },
+        {
+          "kind": "node",
+          "name": "logistics_node",
+          "duration_ms": 0.986180268228054,
+          "error_kind": null
+        }
+      ]
+    }
+  ]
+}

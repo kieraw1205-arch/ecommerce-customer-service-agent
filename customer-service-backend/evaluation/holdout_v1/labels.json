@@ -1,0 +1,902 @@
+[
+  {
+    "id": "H01",
+    "category": [
+      "order"
+    ],
+    "input": {
+      "message": "我核对账单时看到订单 A20261101011，请告诉我它现在处于哪个状态。"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101011"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H02",
+    "category": [
+      "order"
+    ],
+    "input": {
+      "message": "想查一下订单当前状态，但编号我还没发给你。"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H03",
+    "category": [
+      "order"
+    ],
+    "input": {
+      "message": "A20261101012"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": "A20261101012",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H04",
+    "category": [
+      "order"
+    ],
+    "input": {
+      "message": "请按我的登录账号列出订单清单，不要只返回某一笔。"
+    },
+    "expected": {
+      "intent": "order_list",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261101011"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261101012"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261101013"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "B20261101011"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_user_orders",
+          "args": {
+            "user_id": "u_test_alice"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H05",
+    "category": [
+      "switch"
+    ],
+    "input": {
+      "message": "换个问题，商品 SKU_HOLD_101 的杯子能装多少毫升？"
+    },
+    "expected": {
+      "intent": "product_qa",
+      "product_id": "SKU_HOLD_101",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "500ml"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_product",
+          "args": {
+            "product_id": "SKU_HOLD_101"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H06",
+    "category": [
+      "switch"
+    ],
+    "input": {
+      "message": "先别催了，只看 A20261101012 的物流动向。"
+    },
+    "expected": {
+      "intent": "logistics",
+      "order_id": "A20261101012",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "HOLDOUT77"
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H07",
+    "category": [
+      "switch"
+    ],
+    "input": {
+      "message": "退款先搁置，转而查订单 A20261101013 的状态。"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": "A20261101013",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "已取消"
+          },
+          {
+            "path": "state.refund_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101013"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H08",
+    "category": [
+      "logistics"
+    ],
+    "input": {
+      "message": "包裹走到哪一站了？对应订单是 A20261101012。"
+    },
+    "expected": {
+      "intent": "logistics",
+      "order_id": "A20261101012",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "HOLDOUT77"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "留出分拨站"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H09",
+    "category": [
+      "multi_order"
+    ],
+    "input": {
+      "message": "分别核实 A20261101011 和 A20261101012 两笔订单各自的状态。"
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "sub_intents",
+            "op": "len_eq",
+            "value": 2
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101011"
+          }
+        },
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H10",
+    "category": [
+      "logistics"
+    ],
+    "input": {
+      "message": "A20261101012"
+    },
+    "expected": {
+      "intent": "logistics",
+      "order_id": "A20261101012",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "HOLDOUT77"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H11",
+    "category": [
+      "shipping"
+    ],
+    "input": {
+      "message": "确认催发货 A20261101011"
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "turns.0.facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "submitted"
+          },
+          {
+            "path": "facts.shipping_rows",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "H12",
+    "category": [
+      "shipping"
+    ],
+    "input": {
+      "message": "取消催发货"
+    },
+    "expected": {
+      "intent": "cancel",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H13",
+    "category": [
+      "shipping"
+    ],
+    "input": {
+      "message": "确认催发货 A20261101011"
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "cached",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "facts.shipping_rows",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "facts.turn_writes",
+            "op": "eq",
+            "value": 0
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H14",
+    "category": [
+      "shipping"
+    ],
+    "input": {
+      "message": "好的"
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H15",
+    "category": [
+      "refund"
+    ],
+    "input": {
+      "message": "我打算申请订单 A20261101011 的退款。"
+    },
+    "expected": {
+      "intent": "refund",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "原因"
+          },
+          {
+            "path": "state.refund_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H16",
+    "category": [
+      "refund"
+    ],
+    "input": {
+      "message": "退款原因：杯盖有裂口"
+    },
+    "expected": {
+      "intent": "refund",
+      "order_id": "A20261101011",
+      "refund_reason": "杯盖有裂口",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.refund_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认退款"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101011"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H17",
+    "category": [
+      "refund"
+    ],
+    "input": {
+      "message": "确认退款 A20261101011"
+    },
+    "expected": {
+      "intent": "refund",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "cached",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "facts.refund_rows",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "facts.turn_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.refund_workflow.status",
+            "op": "eq",
+            "value": "submitted"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H18",
+    "category": [
+      "refund"
+    ],
+    "input": {
+      "message": "算了，不用了"
+    },
+    "expected": {
+      "intent": "cancel",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.refund_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "H19",
+    "category": [
+      "ownership"
+    ],
+    "input": {
+      "message": "替我查订单 B20261101011 目前的状态。"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": "B20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.api_statuses",
+            "op": "contains",
+            "value": 404
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "留出专用状态"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "B20261101011"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H20",
+    "category": [
+      "ownership"
+    ],
+    "input": {
+      "message": "核实一下订单 A20261101011 的状态信息。"
+    },
+    "expected": {
+      "intent": "order_status",
+      "order_id": "A20261101011",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.api_statuses",
+            "op": "contains",
+            "value": 404
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "留出专用状态"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101011"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H21",
+    "category": [
+      "conditional"
+    ],
+    "input": {
+      "message": "先查询订单 A20261101012 状态；如果订单未发货，再催发货。"
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "ineligible"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "不符合"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H22",
+    "category": [
+      "composite"
+    ],
+    "input": {
+      "message": "先看 A20261101012 的物流，再查看 A20261101013 的订单状态。"
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "HOLDOUT77"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "已取消"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261101012"
+          }
+        },
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261101013"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H23",
+    "category": [
+      "policy"
+    ],
+    "input": {
+      "message": "商品 SKU_HOLD_101 的七天无理由退货政策能否确认？"
+    },
+    "expected": {
+      "intent": "product_qa",
+      "product_id": "SKU_HOLD_101",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "无法确认"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "未提供"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_product",
+          "args": {
+            "product_id": "SKU_HOLD_101"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "H24",
+    "category": [
+      "policy"
+    ],
+    "input": {
+      "message": "商品 SKU_HOLD_101 的保修范围和保修期限有哪些约定？"
+    },
+    "expected": {
+      "intent": "product_qa",
+      "product_id": "SKU_HOLD_101",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "无法确认"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_product",
+          "args": {
+            "product_id": "SKU_HOLD_101"
+          }
+        }
+      ]
+    }
+  }
+]

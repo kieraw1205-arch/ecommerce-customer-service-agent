@@ -1,0 +1,9 @@
+# Direct runtime dependencies pinned to the versions used by this preview verification.
+# Transitive versions are captured in requirements.lock.
+fastapi==0.141.1
+httpx==0.28.1
+langchain-openai==1.4.1
+langgraph==1.2.10
+langgraph-checkpoint-sqlite==3.1.2
+pydantic==2.13.4
+uvicorn==0.52.0

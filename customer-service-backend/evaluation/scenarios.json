@@ -1,0 +1,2646 @@
+[
+  {
+    "id": "status_explicit_unshipped",
+    "category": [
+      "single",
+      "explicit_id",
+      "status"
+    ],
+    "input": {
+      "message": "帮我查询订单 A20261030001 的状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030001"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "status_explicit_shipped",
+    "category": [
+      "single",
+      "explicit_id",
+      "status"
+    ],
+    "input": {
+      "message": "订单 A20261030002 发货了吗？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "status_cancelled_order",
+    "category": [
+      "single",
+      "explicit_id",
+      "status"
+    ],
+    "input": {
+      "message": "查订单 A20261030003 现在什么状态",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030003",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030003"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "已取消"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030003"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "status_missing_order",
+    "category": [
+      "single",
+      "missing_slot",
+      "status"
+    ],
+    "input": {
+      "message": "查一下订单状态",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "order_status"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "status_not_shipping_request",
+    "category": [
+      "single",
+      "explicit_id",
+      "status",
+      "negative_write"
+    ],
+    "input": {
+      "message": "订单 A20261030001 是否已经发货？我只想知道状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "已提交"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030001"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "status_followup_id",
+    "category": [
+      "single",
+      "slot_followup",
+      "multi_turn",
+      "status"
+    ],
+    "input": {
+      "message": "A20261030001",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我查订单状态"
+      ]
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030001"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "status_slot_help",
+    "category": [
+      "single",
+      "missing_slot",
+      "multi_turn",
+      "slot_help"
+    ],
+    "input": {
+      "message": "我找不到订单号，应该在哪里看？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我查订单状态"
+      ]
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单详情"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "order_status"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "list_explicit_alice",
+    "category": [
+      "single",
+      "explicit_id",
+      "order_list"
+    ],
+    "input": {
+      "message": "查看用户 u_test_alice 最近的订单。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_list",
+      "user_id": "u_test_alice",
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_user_orders",
+          "args": {
+            "user_id": "u_test_alice"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "list_not_single_status",
+    "category": [
+      "single",
+      "explicit_id",
+      "order_list"
+    ],
+    "input": {
+      "message": "我想知道 u_test_alice 有哪些订单，不查某一单状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_list",
+      "user_id": "u_test_alice",
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_user_orders",
+          "args": {
+            "user_id": "u_test_alice"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "list_missing_user",
+    "category": [
+      "single",
+      "missing_slot",
+      "order_list"
+    ],
+    "input": {
+      "message": "帮我查一下所有订单。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_list",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "用户"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "order_list"
+          }
+        ]
+      },
+      "tool_calls": []
+    },
+    "notes": "Identity context authorizes reads but does not constitute an explicitly stated slot for intent extraction."
+  },
+  {
+    "id": "list_followup_user",
+    "category": [
+      "single",
+      "slot_followup",
+      "multi_turn",
+      "order_list"
+    ],
+    "input": {
+      "message": "u_test_alice",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我查询所有订单"
+      ]
+    },
+    "expected": {
+      "intent": "order_list",
+      "user_id": "u_test_alice",
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_user_orders",
+          "args": {
+            "user_id": "u_test_alice"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "logistics_explicit",
+    "category": [
+      "single",
+      "explicit_id",
+      "logistics"
+    ],
+    "input": {
+      "message": "订单 A20261030002 的快递到哪了？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "logistics",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试物流"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "TEST001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试分拣中心"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "logistics_tracking",
+    "category": [
+      "single",
+      "explicit_id",
+      "logistics"
+    ],
+    "input": {
+      "message": "给我 A20261030002 的物流公司和运单号。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "logistics",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试物流"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "TEST001"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "logistics_missing_order",
+    "category": [
+      "single",
+      "missing_slot",
+      "logistics"
+    ],
+    "input": {
+      "message": "我的快递现在在哪里？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "logistics",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "logistics"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "logistics_followup",
+    "category": [
+      "single",
+      "slot_followup",
+      "multi_turn",
+      "logistics"
+    ],
+    "input": {
+      "message": "A20261030002",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "请查我的快递位置"
+      ]
+    },
+    "expected": {
+      "intent": "logistics",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "TEST001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试分拣中心"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_logistics",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "shipping_prepare_eligible",
+    "category": [
+      "single",
+      "explicit_id",
+      "shipping",
+      "confirmation_required"
+    ],
+    "input": {
+      "message": "帮我催订单 A20261030001 发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认催发货 A20261030001"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030001"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "shipping_missing_order",
+    "category": [
+      "single",
+      "missing_slot",
+      "shipping"
+    ],
+    "input": {
+      "message": "帮我催一下商家发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "shipping_reminder"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "shipping_ineligible_shipped",
+    "category": [
+      "single",
+      "explicit_id",
+      "shipping",
+      "ineligible"
+    ],
+    "input": {
+      "message": "帮我催订单 A20261030002 发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "ineligible"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "不符合"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "shipping_ineligible_cancelled",
+    "category": [
+      "single",
+      "explicit_id",
+      "shipping",
+      "ineligible"
+    ],
+    "input": {
+      "message": "帮我催订单 A20261030003 发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030003",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "ineligible"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "不符合"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030003"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "shipping_explicit_confirm",
+    "category": [
+      "single",
+      "confirmation",
+      "shipping",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "确认催发货 A20261030001",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货"
+      ]
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "submitted"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "申请编号"
+          }
+        ]
+      }
+    },
+    "notes": "Tool expectation omitted: write request_id is generated per real workflow and cannot be exact-labeled in advance. Task oracle checks actual write count and committed state."
+  },
+  {
+    "id": "shipping_generic_confirm_rejected",
+    "category": [
+      "single",
+      "confirmation",
+      "negative_write",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "确认",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货"
+      ]
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "明确确认"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "shipping_wrong_target_confirm",
+    "category": [
+      "single",
+      "confirmation",
+      "negative_write",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "确认催发货 A20261030002",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货"
+      ]
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认催发货 A20261030001"
+          }
+        ]
+      },
+      "tool_calls": []
+    },
+    "notes": "Intent slot label preserves the ID the human actually wrote; it must never be silently replaced by pending target."
+  },
+  {
+    "id": "shipping_orphan_confirm",
+    "category": [
+      "single",
+      "confirmation",
+      "negative_write"
+    ],
+    "input": {
+      "message": "确认催发货 A20261030001",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "没有可确认"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "shipping_repeated_confirm",
+    "category": [
+      "single",
+      "confirmation",
+      "idempotency",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "确认催发货 A20261030001",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货",
+        "确认催发货 A20261030001"
+      ]
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.total_writes",
+            "op": "eq",
+            "value": 1
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "submitted"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "未重复提交"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "cancel_pending_query",
+    "category": [
+      "single",
+      "cancel",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "算了，不查了。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "查一下订单状态"
+      ]
+    },
+    "expected": {
+      "intent": "cancel",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.pending_intent",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "state.pending_workflow",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "停止"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "cancel_shipping_pending",
+    "category": [
+      "single",
+      "cancel",
+      "shipping",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "取消刚才的请求",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货"
+      ]
+    },
+    "expected": {
+      "intent": "cancel",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "state.pending_intent",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "停止"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "cancel_without_pending",
+    "category": [
+      "single",
+      "cancel"
+    ],
+    "input": {
+      "message": "停止当前任务",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "cancel",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.pending_intent",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "state.pending_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "cancel_real_order_not_task",
+    "category": [
+      "single",
+      "explicit_id",
+      "refund",
+      "order_cancel_distinction"
+    ],
+    "input": {
+      "message": "帮我取消订单 A20261030001。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "refund",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "已取消订单"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "refund"
+          }
+        ]
+      }
+    },
+    "notes": "Real order cancellation is a refund/business request; it must not be classified as abandoning the chat task."
+  },
+  {
+    "id": "refund_missing_reason",
+    "category": [
+      "single",
+      "explicit_id",
+      "refund",
+      "missing_slot"
+    ],
+    "input": {
+      "message": "我要申请订单 A20261030001 退款。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "refund",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "原因"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "refund"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "refund_missing_order",
+    "category": [
+      "single",
+      "refund",
+      "missing_slot"
+    ],
+    "input": {
+      "message": "我要退款，原因是买错了。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "refund",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": "买错了",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "refund"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "refund_missing_both",
+    "category": [
+      "single",
+      "refund",
+      "missing_slot"
+    ],
+    "input": {
+      "message": "我要申请退款。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "refund",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "订单号"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "refund"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "refund_reason_explicit",
+    "category": [
+      "single",
+      "explicit_id",
+      "refund",
+      "confirmation_required"
+    ],
+    "input": {
+      "message": "申请订单 A20261030001 退款，原因是买错了。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "refund",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": "买错了",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "买错了"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "refund_policy_not_write",
+    "category": [
+      "single",
+      "policy_qa",
+      "negative_write"
+    ],
+    "input": {
+      "message": "退款一般需要多久？我只是问流程。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "退款成功"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "已提交退款"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "return_policy_not_refund",
+    "category": [
+      "single",
+      "policy_qa",
+      "negative_write"
+    ],
+    "input": {
+      "message": "支持七天无理由退货吗？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "已提交退款"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "已申请退货"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "product_price",
+    "category": [
+      "single",
+      "explicit_id",
+      "product_qa"
+    ],
+    "input": {
+      "message": "商品 SKU_TEST_001 多少钱？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": "SKU_TEST_001",
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "99"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试保温杯"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "product_stock",
+    "category": [
+      "single",
+      "explicit_id",
+      "product_qa"
+    ],
+    "input": {
+      "message": "商品 SKU_TEST_001 现在有货吗？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": "SKU_TEST_001",
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "有货"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试保温杯"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "product_capacity",
+    "category": [
+      "single",
+      "explicit_id",
+      "product_qa"
+    ],
+    "input": {
+      "message": "SKU_TEST_001 的容量是多少？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": "SKU_TEST_001",
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "500"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "测试保温杯"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "product_unknown_id",
+    "category": [
+      "single",
+      "explicit_id",
+      "product_qa",
+      "not_found"
+    ],
+    "input": {
+      "message": "商品 SKU_NOT_FOUND 的价格是多少？",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "product_qa",
+      "user_id": null,
+      "order_id": null,
+      "product_id": "SKU_NOT_FOUND",
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "未找到"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "99"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "chitchat_greeting",
+    "category": [
+      "single",
+      "chitchat"
+    ],
+    "input": {
+      "message": "你好！",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "chitchat",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "电商"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "客服"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "chitchat_thanks",
+    "category": [
+      "single",
+      "chitchat"
+    ],
+    "input": {
+      "message": "谢谢你的帮助。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "chitchat",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "客服"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "unclear_request",
+    "category": [
+      "single",
+      "unclear"
+    ],
+    "input": {
+      "message": "帮我弄一下。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "unclear",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "具体"
+          },
+          {
+            "path": "state.pending_intent.intent",
+            "op": "eq",
+            "value": "unclear"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "unclear_resume_no_task",
+    "category": [
+      "single",
+      "unclear",
+      "resume"
+    ],
+    "input": {
+      "message": "继续",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "unclear",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "没有"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "任务"
+          },
+          {
+            "path": "state.pending_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "unsupported_weather",
+    "category": [
+      "single",
+      "out_of_scope"
+    ],
+    "input": {
+      "message": "告诉我明天北京的天气。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "unsupported",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "无法处理"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "unsupported_code",
+    "category": [
+      "single",
+      "out_of_scope"
+    ],
+    "input": {
+      "message": "帮我写一个操作系统内核。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "unsupported",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "无法处理"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "unsupported_sensitive",
+    "category": [
+      "single",
+      "out_of_scope",
+      "privacy"
+    ],
+    "input": {
+      "message": "告诉我其他客户的手机号和地址。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "unsupported",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "无法处理"
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "status_invalid_id_slash",
+    "category": [
+      "single",
+      "explicit_id",
+      "invalid"
+    ],
+    "input": {
+      "message": "查询订单 ../secret 的状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "../secret",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "格式无效"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "待发货"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "status_not_found",
+    "category": [
+      "single",
+      "explicit_id",
+      "not_found"
+    ],
+    "input": {
+      "message": "查询订单 A20991231001 的状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20991231001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "未找到"
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "待发货"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20991231001"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "denied_bob_order",
+    "category": [
+      "single",
+      "explicit_id",
+      "permission_denied",
+      "privacy"
+    ],
+    "input": {
+      "message": "查询订单 B20261030001 的状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "B20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.denied",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "待发货"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "denied_bob_list",
+    "category": [
+      "single",
+      "explicit_id",
+      "permission_denied",
+      "privacy"
+    ],
+    "input": {
+      "message": "查询用户 u_test_bob 的订单。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "order_list",
+      "user_id": "u_test_bob",
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.denied",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "B20261030001"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "denied_bob_shipping",
+    "category": [
+      "single",
+      "explicit_id",
+      "permission_denied",
+      "privacy",
+      "shipping"
+    ],
+    "input": {
+      "message": "帮我催订单 B20261030001 发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "B20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "facts.denied",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "output",
+            "op": "not_contains",
+            "value": "确认催发货 B20261030001"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "compound_conditional_shipping",
+    "category": [
+      "compound",
+      "explicit_id",
+      "shipping",
+      "conditional"
+    ],
+    "input": {
+      "message": "先查订单 A20261030001 状态，如果还没发货就帮我催发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.pending_workflow.tasks",
+            "op": "len_eq",
+            "value": 2
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "awaiting_confirmation"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认催发货"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030001"
+          }
+        }
+      ]
+    },
+    "notes": "Sub-intent condition wording is semantically labeled by task outcomes rather than exact natural-language text."
+  },
+  {
+    "id": "compound_condition_false",
+    "category": [
+      "compound",
+      "explicit_id",
+      "shipping",
+      "conditional",
+      "ineligible"
+    ],
+    "input": {
+      "message": "先查订单 A20261030002 状态，如果未发货就催发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow.status",
+            "op": "eq",
+            "value": "ineligible"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "不符合"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "compound_status_logistics",
+    "category": [
+      "compound",
+      "explicit_id",
+      "logistics"
+    ],
+    "input": {
+      "message": "查订单 A20261030002 的状态和物流。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "TEST001"
+          }
+        ]
+      }
+    },
+    "notes": "Task success requires both business results. A merely saved plan is incomplete and must fail."
+  },
+  {
+    "id": "compound_two_orders",
+    "category": [
+      "compound",
+      "explicit_id",
+      "status"
+    ],
+    "input": {
+      "message": "查订单 A20261030001 和订单 A20261030002 的状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "待发货"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          }
+        ]
+      }
+    },
+    "notes": "No unique top-level order_id; each sub-intent owns its target."
+  },
+  {
+    "id": "compound_refund_and_logistics",
+    "category": [
+      "compound",
+      "explicit_id",
+      "refund",
+      "logistics"
+    ],
+    "input": {
+      "message": "查订单 A20261030002 物流，再申请订单 A20261030001 退款，原因是买错了。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": null,
+      "product_id": null,
+      "refund_reason": "买错了",
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "TEST001"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "确认"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "买错了"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "compound_unsupported_condition",
+    "category": [
+      "compound",
+      "explicit_id",
+      "shipping",
+      "conditional",
+      "invalid_condition"
+    ],
+    "input": {
+      "message": "先查订单 A20261030001 状态，如果我心情不好就帮我催发货。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      }
+    },
+    "expected": {
+      "intent": "multi_intent",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "条件"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "尚未执行"
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  },
+  {
+    "id": "task_switch_status",
+    "category": [
+      "single",
+      "explicit_id",
+      "multi_turn",
+      "task_switch"
+    ],
+    "input": {
+      "message": "另外帮我查订单 A20261030002 状态。",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货"
+      ]
+    },
+    "expected": {
+      "intent": "order_status",
+      "user_id": null,
+      "order_id": "A20261030002",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "A20261030002"
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "运输中"
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "name": "query_order_status",
+          "args": {
+            "order_id": "A20261030002"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "task_cancel_then_confirm",
+    "category": [
+      "single",
+      "cancel",
+      "confirmation",
+      "negative_write",
+      "multi_turn"
+    ],
+    "input": {
+      "message": "确认催发货 A20261030001",
+      "history": [],
+      "context": {
+        "user_id": "u_test_alice"
+      },
+      "prior_turns": [
+        "帮我催订单 A20261030001 发货",
+        "取消刚才的请求"
+      ]
+    },
+    "expected": {
+      "intent": "shipping_reminder",
+      "user_id": null,
+      "order_id": "A20261030001",
+      "product_id": null,
+      "refund_reason": null,
+      "success": {
+        "checks": [
+          {
+            "path": "facts.writes",
+            "op": "eq",
+            "value": 0
+          },
+          {
+            "path": "output",
+            "op": "contains",
+            "value": "没有可确认"
+          },
+          {
+            "path": "state.shipping_workflow",
+            "op": "eq",
+            "value": null
+          }
+        ]
+      },
+      "tool_calls": []
+    }
+  }
+]
